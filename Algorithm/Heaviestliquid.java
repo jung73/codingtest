@@ -1,38 +1,52 @@
-import java.util.Arrays;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class Heaviestliquid {
-    public static long HeaviestLiquid(int[][] L, int n, long c) {
+    public static long HeaviestLiquid(int[][] L, double[] density, int n, long c) {
         //L을 w/v 밀도 순으로 sort
-        Arrays.sort(L, (a,b) ->{
-            long ValA=(long) a[1] * b[0]; //[1]은 무게, [0]은 크기
-            long ValB=(long) b[1] * a[0];
-            return Long.compare(ValB, ValA); //내림차순
-        });
+        Integer[] idx = new Integer[n];
+        for (int i = 0; i < n; i++) idx[i] = i;
+
+        Arrays.sort(idx, (a, b) -> Double.compare(density[b], density[a]));
 
         double w=0;
         for (int i=0;i<n;i++){
-            if (c<=L[i][0]){
-                w = w+ (double) c*L[i][1]/L[i][0];
+            int index=idx[i];
+
+            int volume=L[index][0]; //부피
+            int weight=L[index][1]; //무게
+
+            if (c<=volume){
+                w = w+ (double) c*density[index];
                 return (long) w;
             }
             else {
-                w=w+L[i][1];
-                c=c-L[i][0];
+                w=w+weight;
+                c=c-volume;
             }
         }
         return (long) w;
     }
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int t= sc.nextInt();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st;
+
+        int t= Integer.parseInt(br.readLine());
+
         while(t-- >0){
-            int n = sc.nextInt();
+            int n = Integer.parseInt(br.readLine());
             int[][] L=new int[n][2];
-            for (int i=0;i<n;i++) L[i][0]=sc.nextInt();
-            for (int i=0;i<n;i++) L[i][1]=sc.nextInt();
-            long p = sc.nextLong();
-            System.out.println(HeaviestLiquid(L, n, p));
+            double[] density= new double[n];
+
+            st = new StringTokenizer(br.readLine());
+            for (int i=0;i<n;i++) L[i][0]=Integer.parseInt(st.nextToken());
+            st = new StringTokenizer(br.readLine());
+            for (int i=0;i<n;i++) L[i][1]=Integer.parseInt(st.nextToken());
+
+            for (int i=0; i<n; i++) density[i]=(double) L[i][1] / L[i][0];
+            long p = Long.parseLong(br.readLine());
+
+            System.out.println(HeaviestLiquid(L, density, n, p));
         }
     }
 }
