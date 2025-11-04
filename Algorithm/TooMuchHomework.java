@@ -4,7 +4,7 @@ import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class TooMuchHomework {
-    public static int MaximumScore(int[][] Homework, int n) {
+    public static long MaximumScore(int[][] Homework, int n) {
         Arrays.sort(Homework, Comparator.comparingInt(a -> a[1]));
 
         PriorityQueue<Integer> scores = new PriorityQueue<>(); //점수 저장 큐
@@ -22,7 +22,7 @@ public class TooMuchHomework {
 
         }
 
-        int total_score=0;
+        long total_score=0;
         while (!scores.isEmpty()){
             total_score = total_score + scores.poll();
         }
@@ -47,3 +47,4 @@ public class TooMuchHomework {
     }
 
 }
+
